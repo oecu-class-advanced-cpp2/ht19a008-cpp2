@@ -15,11 +15,16 @@ bool is_prime(unsigned int x) {
 	//2からx-1までの数がxを割れるかチェックする。
 	for (int i = 2; i<x; i++) {
 		if (x%i == 0) {
-			return false;	
+			flag = 1;
+			break;
 		}
-		else {
-			return true;
-		}
+	}
+
+	if (flag == 0) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 /* --------------------------------------------------------------- */
@@ -40,6 +45,8 @@ int nth_prime(unsigned int a, unsigned int d, unsigned int n) {
 		if (is_prime(num) == true) {
 			count++;
 		}
+		std::cout << count << std::endl;
+		std::cout << num << std::endl;
 		num += d;
 		if (count == n) {
 			return num;
@@ -52,6 +59,7 @@ int nth_prime(unsigned int a, unsigned int d, unsigned int n) {
 
 int main() {
 	std::cout << nth_prime(179 ,10 ,203) << std::endl;
+	std::cout << is_prime(189) << std::endl;
 	//std::cout << nth_prime(367, 186, 151) << std::endl;
 	// 以下、同様に、入出力例通りになるか確認せよ。
 	return 0;
