@@ -8,6 +8,40 @@ namespace cpp2 {
 	*/
 	/* --------------------------------------------------------------------- */
 	class mcxi {
+	private:
+		int value_;
+	public:
+		char c[4] = { 'm', 'c', 'x', 'i' };
+		int v[4] = { 1000, 100, 10, 1 };
+		mcxi operator + (mcxi rhs)
+		{
+			mcxi nm("");
+			nm.value_ = this->value_ + rhs.value_;
+			return nm;
+		}
+		mcxi::mcxi(const std::string& s): value_(0) {
+			int cc = 0;
+			int cs = 0;
+			int d = 1;
+			for (int i = 0; i < s.size(); i++) {
+				for (int j = 0; j < 4; j++) {
+					if (s[i] == c[j]) {
+						cc = j;
+						value_ += d*v[cc];
+						d = 1;
+					}else { cs++;}
+					if (cs == 4) {
+						d = (int)(s[i] - '0');
+						cs = 0;
+					}
+				}
+				cs = 0;
+			}
+		}
+		std::string mcxi::to_string()
+		{
+			return std::to_string(value_);
+		}
 	};
 } // namespace cpp2
 int main() {
