@@ -10,6 +10,14 @@ namespace cpp2 {
 	class mcxi {
 	private:
 		int value_;
+		int unit(char c) {
+			switch (c) {
+			case 'm': return 1000;
+			case 'c': return 100;
+			case 'x': return 10;
+			case 'i': return 1;
+			}
+		}
 	public:
 		char c[4] = { 'm', 'c', 'x', 'i' };
 		int v[4] = { 1000, 100, 10, 1 };
