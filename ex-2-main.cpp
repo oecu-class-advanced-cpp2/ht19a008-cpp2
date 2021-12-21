@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 namespace cpp2 {
 	/* --------------------------------------------------------------------- */
 	/*
@@ -12,43 +13,88 @@ namespace cpp2 {
 		int value_;
 		int unit(char c) {
 			switch (c) {
-			case 'm': return 1000;
-			case 'c': return 100;
-			case 'x': return 10;
-			case 'i': return 1;
+			case 'm': return 1000; break;
+			case 'c': return 100; break;
+			case 'x': return 10; break;
+			case 'i': return 1; break;
 			}
 		}
 	public:
-		char c[4] = { 'm', 'c', 'x', 'i' };
-		int v[4] = { 1000, 100, 10, 1 };
-		mcxi operator + (mcxi rhs)
+		mcxi(const std::string& s) : value_(0) {
+			int num = 0;
+			for (auto pos = s.begin(); pos != s.end(); ++pos) {
+				//*pos は、char ! char ってことが分かってたら、もっと簡単にできるのでは？？
+				if (*pos >= '2' && *pos <= '9') {
+					num = (int)(*pos - '0');
+				}
+				else {
+					int u = unit(*pos);
+					value_ += std::max(num, 1) * u;
+					num = 0;
+				}
+			}
+		}
+		/* --------------------------------------------------------------------- */
+		/*
+		operator +
+		2つのオブジェクトの加算結果を取得します。
+		*/
+		/* --------------------------------------------------------------------- */
+		mcxi operator + (mcxi& rhs)
 		{
 			mcxi nm("");
 			nm.value_ = this->value_ + rhs.value_;
 			return nm;
 		}
-		mcxi::mcxi(const std::string& s): value_(0) {
-			int cc = 0;
-			int cs = 0;
-			int d = 1;
-			for (int i = 0; i < s.size(); i++) {
-				for (int j = 0; j < 4; j++) {
-					if (s[i] == c[j]) {
-						cc = j;
-						value_ += d*v[cc];
-						d = 1;
-					}else { cs++;}
-					if (cs == 4) {
-						d = (int)(s[i] - '0');
-						cs = 0;
-					}
-				}
-				cs = 0;
-			}
-		}
+		/* --------------------------------------------------------------------- */
+		/*
+		to_string()
+		現在の値をmcxi記述に変換します。
+		*/
+		/* --------------------------------------------------------------------- */
 		std::string mcxi::to_string()
 		{
-			return std::to_string(value_);
+			std::string mcxi;
+			int calc = value_;
+			if (calc / 1000 >= 1) {
+				if (calc / 1000 == 1) {
+					mcxi += "m";
+					calc = calc - 1000;
+				}
+				else {
+					mcxi += std::to_string(calc / 1000) + "m";
+					calc = calc - (calc / 1000) * 1000;
+				}
+			};
+			if (calc / 100 >= 1) {
+				if (calc / 100 == 1) {
+					mcxi += "c";
+					calc = calc - 100;
+				}
+				else {
+					mcxi += std::to_string(calc / 100) + "c";
+					calc = calc - (calc / 100) * 100;
+				}
+			};
+			if (calc / 10 >= 1) {
+				if (calc / 10 == 1) {
+					mcxi += "x";
+					calc = calc - 10;
+				}
+				else {
+					mcxi += std::to_string(calc / 10) + "x";
+					calc = calc - (calc / 10) * 10;
+				}
+			};
+			if (calc % 10 >= 1) {
+				if (calc % 10 == 1) {
+					mcxi += "i";
+				}
+				else {
+					mcxi += std::to_string(calc % 10) + "i";
+				}
+			};
+			return mcxi;
 		}
 	};
 } // namespace cpp2
@@ -94,3 +140,4 @@ int main() {
 	cpp2::mcxi result9 = a9 + b9;
 	std::cout << "9m9c9x9i" << " " << result9.to_string() << std::endl;
 }
+
