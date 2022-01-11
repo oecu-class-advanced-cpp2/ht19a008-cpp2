@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <sstream>
 namespace cpp2 {
 	/* --------------------------------------------------------------------- */
 	/*
@@ -54,47 +55,27 @@ namespace cpp2 {
 		/* --------------------------------------------------------------------- */
 		std::string mcxi::to_string()
 		{
-			std::string mcxi;
-			int calc = value_;
-			if (calc / 1000 >= 1) {
-				if (calc / 1000 == 1) {
-					mcxi += "m";
-					calc = calc - 1000;
+			std::stringstream ss;
+			for (int i = 3; i >= 0; i--) {
+				char c;
+				switch (i) {
+				case 3: c = 'm'; break;
+				case 2: c = 'c'; break;
+				case 1: c = 'x'; break;
+				case 0: c = 'i'; break;
 				}
-				else {
-					mcxi += std::to_string(calc / 1000) + "m";
-					calc = calc - (calc / 1000) * 1000;
+				int q = value_ / std::pow(10, i);
+				if (q == 1) {
+					ss << c;
+					value_ = value_ - std::pow(10, i);
 				}
-			};
-			if (calc / 100 >= 1) {
-				if (calc / 100 == 1) {
-					mcxi += "c";
-					calc = calc - 100;
+				if (q > 1) {
+					ss << q;
+					ss << c;
+					value_ = value_ - std::pow(10, i)*q;
 				}
-				else {
-					mcxi += std::to_string(calc / 100) + "c";
-					calc = calc - (calc / 100) * 100;
-				}
-			};
-			if (calc / 10 >= 1) {
-				if (calc / 10 == 1) {
-					mcxi += "x";
-					calc = calc - 10;
-				}
-				else {
-					mcxi += std::to_string(calc / 10) + "x";
-					calc = calc - (calc / 10) * 10;
-				}
-			};
-			if (calc % 10 >= 1) {
-				if (calc % 10 == 1) {
-					mcxi += "i";
-				}
-				else {
-					mcxi += std::to_string(calc % 10) + "i";
-				}
-			};
-			return mcxi;
+			}
+			return ss.str();
 		}
 	};
 } // namespace cpp2
